@@ -7,10 +7,12 @@ namespace Client.Networking
 {
     public class ClientSocket
     {
+        // Buffer, client socket and the remote server
         private static Socket _clientSocket;
         private static IPEndPoint _remoteAddr;
         private static byte[] _buffer;
 
+        // Initialize socket based on a remote ip and port
         public ClientSocket(string ipAddr, int ipPort)
         {
             _remoteAddr = new IPEndPoint(IPAddress.Parse(ipAddr), ipPort);
@@ -20,6 +22,7 @@ namespace Client.Networking
             _clientSocket.BeginConnect(_remoteAddr, ConnectCallBack, null);
         }
 
+        // Begin accepting data from endpoint
         void ConnectCallBack(IAsyncResult result)
         {
             if (_clientSocket.Connected)
@@ -34,6 +37,8 @@ namespace Client.Networking
                 _clientSocket.BeginConnect(_remoteAddr, ConnectCallBack, null);
             }
         }
+
+        // Responding to callbacks from endpoint
         void RecieveCallback(IAsyncResult result)
         {
             byte[] packet = new byte[_clientSocket.EndReceive(result)];
