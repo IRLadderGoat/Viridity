@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Share;
+using System;
+using System.Collections.Generic;
+using System.Net.Sockets;
 using System.Windows.Forms;
-
 
 namespace Server
 {
@@ -11,66 +13,36 @@ namespace Server
         public Form1()
         {
             InitializeComponent();
-            
+
+            Timer timer = new Timer();
+            timer.Tick += new EventHandler(ListClients);
+            timer.Interval = 10000;
+            timer.Start();
+            //System.Threading.Timer timer = new System.Threading.Timer((TimerCallback)ListClients, null, 10000, 10000);
         }
 
-        private void ListClients()
+        private void ListClients(object sender, EventArgs e)
         {
             
             listView1.Items.Clear();
+            serverSocket.SendRequest(PacketType.ListClient, serverSocket._clientSockets.ToArray());
 
-            string[,] socketInfo = serverSocket.getSocketInfo();
-            for (int i = 0; i < socketInfo.GetLength(0); i++)
-            {
-                ListViewItem lvi = new ListViewItem{ Text = socketInfo[i,0] };
-                lvi.SubItems.Add(socketInfo[i,1]);
-                lvi.SubItems.Add(socketInfo[i,2]);
-                listView1.Items.Add(lvi);
-            }
+            foreach (KeyValuePair<Socket,string[]> client in serverSocket._clientInfo) {
+                string ping = serverSocket.PingClient(client.Key).ToString();
+                ListViewItem lvi = new ListViewItem { Text = client.Value[client.Value.Length - 1] };
 
-            /*
-            foreach (Socket _socket in serverSocket._clientSockets)
-            {
-
-                ListViewItem lvi = new ListViewItem
-                {
-                    Text = i.ToString()
-                };
-                lvi.SubItems.Add(_socket.RemoteEndPoint.ToString());
-                lvi.SubItems.Add(_socket.Handle.ToString());
-                listView1.Items.Add(lvi);
-                i++;
-            }
-            */
-            
-        }
-        private void ListClients(string pcName)
-        {
-            /*
-            MethodInvoker mi = delegate
-            {
-                int i = 0;
-                listView1.Items.Clear();
-                foreach (Socket _socket in serverSocket._clientSockets)
-                {
-                    ListViewItem lvi = new ListViewItem
-                    {
-                        Text = i.ToString()
-                    };
-                    lvi.SubItems.Add(_socket.RemoteEndPoint.ToString());
-                    lvi.SubItems.Add(_socket.Handle.ToString());
-                    listView1.Items.Add(lvi);
-                    i++;
+                for (int i = 0; i < client.Value.Length - 1; i++) {
+                    lvi.SubItems.Add(client.Value[i]);
                 }
-            };
-            if (InvokeRequired)
-                this.Invoke(mi);
-            */
+                lvi.SubItems.Add(ping);
+                listView1.Items.Add(lvi);
+
+            }
         }
 
         private void refreshToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ListClients();
+            ListClients(null, null);
         }
 
         private void button1_Click(object sender, EventArgs e)
