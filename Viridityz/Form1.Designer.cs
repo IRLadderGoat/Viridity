@@ -31,6 +31,8 @@
             this.components = new System.ComponentModel.Container();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.refreshToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DownloadFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.downloadAndExecuteFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.button1 = new System.Windows.Forms.Button();
             this.textBox2 = new System.Windows.Forms.TextBox();
@@ -43,9 +45,9 @@
             this.ch0 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ch1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ch2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.tabPage3 = new System.Windows.Forms.TabPage();
             this.ch3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ch4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.tabPage3 = new System.Windows.Forms.TabPage();
             this.contextMenuStrip1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -55,16 +57,32 @@
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.refreshToolStripMenuItem});
+            this.refreshToolStripMenuItem,
+            this.DownloadFileToolStripMenuItem,
+            this.downloadAndExecuteFileToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(111, 26);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(217, 70);
             // 
             // refreshToolStripMenuItem
             // 
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
-            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
             this.refreshToolStripMenuItem.Text = "refresh";
             this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
+            // 
+            // DownloadFileToolStripMenuItem
+            // 
+            this.DownloadFileToolStripMenuItem.Name = "DownloadFileToolStripMenuItem";
+            this.DownloadFileToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.DownloadFileToolStripMenuItem.Text = "Download File";
+            this.DownloadFileToolStripMenuItem.Click += new System.EventHandler(this.DownloadFileToolStripMenuItem_Click);
+            // 
+            // downloadAndExecuteFileToolStripMenuItem
+            // 
+            this.downloadAndExecuteFileToolStripMenuItem.Name = "downloadAndExecuteFileToolStripMenuItem";
+            this.downloadAndExecuteFileToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.downloadAndExecuteFileToolStripMenuItem.Text = "Download and Execute File";
+            this.downloadAndExecuteFileToolStripMenuItem.Click += new System.EventHandler(this.downloadAndExecuteFileToolStripMenuItem_Click);
             // 
             // tabPage2
             // 
@@ -76,7 +94,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(439, 227);
+            this.tabPage2.Size = new System.Drawing.Size(647, 227);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Builder";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -180,16 +198,6 @@
             this.ch2.Text = "OS Version";
             this.ch2.Width = 90;
             // 
-            // tabPage3
-            // 
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(439, 227);
-            this.tabPage3.TabIndex = 2;
-            this.tabPage3.Text = "Settings";
-            this.tabPage3.UseVisualStyleBackColor = true;
-            // 
             // ch3
             // 
             this.ch3.Text = "Locale";
@@ -197,6 +205,16 @@
             // ch4
             // 
             this.ch4.Text = "Ping";
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(647, 227);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Settings";
+            this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -233,6 +251,8 @@
         private System.Windows.Forms.ColumnHeader ch2;
         private System.Windows.Forms.ColumnHeader ch3;
         private System.Windows.Forms.ColumnHeader ch4;
+        private System.Windows.Forms.ToolStripMenuItem DownloadFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem downloadAndExecuteFileToolStripMenuItem;
     }
 }
 

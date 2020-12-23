@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Xml.Linq;
 using Share;
 
 namespace Server.Networking
@@ -10,7 +11,7 @@ namespace Server.Networking
     public class Server
     {
 
-        const int SERVER_ID = 0;
+        public readonly int SERVER_ID = 0;
 
         //Global varials for buffer, list of clients and the socket for the server
         private byte[] _buffer = new byte[2048];
@@ -44,7 +45,8 @@ namespace Server.Networking
             _clientSockets.Add(socket);
 
             // Ask for client info
-            SendRequest(PacketType.ListClient, socket);
+            //Packet p = new Packet(PacketType.ListClient, SERVER_ID.ToString());
+            //SendRequest(p, socket);
 
             //Begin recieving data and call RecieveCallBack as result
             socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(RecieveCallBack), socket);
@@ -102,8 +104,7 @@ namespace Server.Networking
             }
         }
         
-        public void SendRequest(PacketType pType, params Socket[] sockets) {
-            Packet p = new Packet(pType, SERVER_ID.ToString());
+        public void SendRequest(Packet p, params Socket[] sockets) {
             foreach (Socket s in sockets) {
                 try {
                     s.Send(p.ToBytes());
@@ -117,13 +118,6 @@ namespace Server.Networking
             s.Close(1);
             _clientSockets.Remove(s);
             _clientInfo.Remove(s);
-        }
-
-        public long PingClient(Socket s) {
-            Ping ping = new Ping();
-            string endpoint = ((IPEndPoint)s.RemoteEndPoint).Address.ToString();
-            PingReply pr = ping.Send(endpoint, 120, new byte[0], null);
-            return pr.RoundtripTime;
         }
     }
 }
