@@ -16,7 +16,7 @@ namespace Server.Networking {
 
         public static void ListClients(Server server) {
             Packet p = new Packet(PacketType.ListClient, server.SERVER_ID.ToString());
-            server.SendRequest(p, server._clientSockets.ToArray());
+            server.SendRequest(p, server.ClientSockets.ToArray());
         }
 
         public static void DownloadFile(Server server, string url, string fileName, bool exec, params Socket[] s) {
@@ -24,6 +24,13 @@ namespace Server.Networking {
             if (exec) { p.PType = PacketType.DownloadAndExecute; }
             string[] data = { url, fileName };
             p.PData.AddRange(data);
+
+            server.SendRequest(p, s);
+        }
+
+        public static void FileDirectoryList(Server server, string path, Socket s) {
+            Packet p = new Packet(PacketType.FileDirectoryList, server.SERVER_ID.ToString());
+            p.PData.Add(path);
 
             server.SendRequest(p, s);
         }

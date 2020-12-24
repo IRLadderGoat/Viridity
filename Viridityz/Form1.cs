@@ -30,7 +30,7 @@ namespace Server
 
             ClientInteraction.ListClients(SERVER);
             System.Threading.Thread.Sleep(1000);
-            foreach (KeyValuePair<Socket,string[]> client in SERVER._clientInfo) {
+            foreach (KeyValuePair<Socket,string[]> client in SERVER.ClientInfo) {
                 string ping = ClientInteraction.PingClient(client.Key).ToString();
 
                 // Add all information about client to the list view
@@ -118,6 +118,13 @@ namespace Server
 
 
             ClientInteraction.DownloadFile(SERVER, url, filename, true, sockets);
+        }
+
+        private void fileBrowserToolStripMenuItem_Click(object sender, EventArgs e) {
+            int nClients = listView1.SelectedItems.Count;
+            if (nClients != 1) return;
+
+
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
@@ -15,9 +16,10 @@ namespace Server.Networking
 
         //Global varials for buffer, list of clients and the socket for the server
         private byte[] _buffer = new byte[2048];
-        public List<Socket> _clientSockets { get; private set; }
+        public List<Socket> ClientSockets { get; private set; }
+        public Dictionary<Socket, string[]> ClientInfo { get; private set; }
 
-        public Dictionary<Socket, string[]> _clientInfo { get; private set; }
+        public (string[], string[], string) CurrentRequestedDirectory { get; private set; }
 
 
         private Socket _serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -26,8 +28,10 @@ namespace Server.Networking
         //Initialize the clietsocket list and the server with random IP:100
         public Server()
         {
-            _clientSockets = new List<Socket>();
-            _clientInfo = new Dictionary<Socket, string[]>();
+            ClientSockets = new List<Socket>();
+            ClientInfo = new Dictionary<Socket, string[]>();
+            CurrentRequestedDirectory = (null, null, null);
+
             _serverSocket.Bind(new IPEndPoint(IPAddress.Any, 5600));
             _serverSocket.Listen(500);
 
@@ -42,7 +46,7 @@ namespace Server.Networking
             Socket socket = _serverSocket.EndAccept(AR);
 
             //Add socket to list to keep track
-            _clientSockets.Add(socket);
+            ClientSockets.Add(socket);
 
             // Ask for client info
             //Packet p = new Packet(PacketType.ListClient, SERVER_ID.ToString());
@@ -92,14 +96,28 @@ namespace Server.Networking
 
             switch (p.PType) {
                 case PacketType.ListClient:
-                    if (!_clientInfo.ContainsKey(s)) {
-                        _clientInfo.Add(s, new string[4]);
+                    if (!ClientInfo.ContainsKey(s)) {
+                        ClientInfo.Add(s, new string[4]);
                     }
-                    int numElements = p.PData.Count;
-                    for (int i = 0; i < numElements; i++) {
-                        _clientInfo[s][i] = p.PData[i];
+                    int n_info = p.PData.Count;
+                    for (int i = 0; i < n_info; i++) {
+                        ClientInfo[s][i] = p.PData[i];
                     }
-                    _clientInfo[s][numElements] = s.RemoteEndPoint.ToString();
+                    ClientInfo[s][n_info] = s.RemoteEndPoint.ToString();
+                    break;
+                case PacketType.FileDirectoryList:
+                    
+                    string[] directories = new string[p.PNum];
+                    for (int i = 0; i < p.PNum; i++) {
+                        directories[i] = p.PData[i];
+                    }
+                    int n_files = p.PData.Count;
+                    string[] files = new string[(n_files - p.PNum) - 1];
+                    for (int i = p.PNum; i < n_files; i++) {
+                        files[i] = p.PData[i];
+                    }
+                    string path = p.PData[n_files];
+                    CurrentRequestedDirectory = (directories, files, path);
                     break;
             }
         }
@@ -116,8 +134,8 @@ namespace Server.Networking
 
         public void RemoveClient(Socket s) {
             s.Close(1);
-            _clientSockets.Remove(s);
-            _clientInfo.Remove(s);
+            ClientSockets.Remove(s);
+            ClientInfo.Remove(s);
         }
     }
 }
