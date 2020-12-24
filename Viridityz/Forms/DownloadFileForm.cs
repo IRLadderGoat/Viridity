@@ -10,6 +10,7 @@ using System.Windows.Forms;
 
 namespace Server {
     public partial class DownloadFileForm : Form {
+        
         public DownloadFileForm() {
             InitializeComponent();
         }
@@ -17,5 +18,7 @@ namespace Server {
         private void button2_Click(object sender, EventArgs e) {
             this.Close();
         }
+
+        
     }
 }

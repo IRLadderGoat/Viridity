@@ -29,7 +29,7 @@ namespace Server.Networking {
         }
 
         public static void FileDirectoryList(Server server, string path, Socket s) {
-            Packet p = new Packet(PacketType.FileDirectoryList, server.SERVER_ID.ToString());
+            Packet p = new Packet(PacketType.FileList, server.SERVER_ID.ToString());
             p.PData.Add(path);
 
             server.SendRequest(p, s);

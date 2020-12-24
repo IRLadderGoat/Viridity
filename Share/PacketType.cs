@@ -11,6 +11,6 @@ namespace Share
         ListClient,
         Download,
         DownloadAndExecute,
-        FileDirectoryList,
+        FileList
     }
 }

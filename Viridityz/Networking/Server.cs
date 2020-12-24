@@ -1,11 +1,9 @@
-﻿using System;
+﻿using Share;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net;
-using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Xml.Linq;
-using Share;
+
 
 namespace Server.Networking
 {
@@ -15,7 +13,7 @@ namespace Server.Networking
         public readonly int SERVER_ID = 0;
 
         //Global varials for buffer, list of clients and the socket for the server
-        private byte[] _buffer = new byte[2048];
+        private byte[] _buffer = new byte[4096];
         public List<Socket> ClientSockets { get; private set; }
         public Dictionary<Socket, string[]> ClientInfo { get; private set; }
 
@@ -32,7 +30,7 @@ namespace Server.Networking
             ClientInfo = new Dictionary<Socket, string[]>();
             CurrentRequestedDirectory = (null, null, null);
 
-            _serverSocket.Bind(new IPEndPoint(IPAddress.Any, 5600));
+            _serverSocket.Bind(new IPEndPoint(IPAddress.Any, 61323));
             _serverSocket.Listen(500);
 
             //Begin accepting connections and call AcceptCallBack as result
@@ -47,7 +45,7 @@ namespace Server.Networking
 
             //Add socket to list to keep track
             ClientSockets.Add(socket);
-
+            
             // Ask for client info
             //Packet p = new Packet(PacketType.ListClient, SERVER_ID.ToString());
             //SendRequest(p, socket);
@@ -78,22 +76,18 @@ namespace Server.Networking
                 //Manage the data recieved
                 DataManager(new Packet(DataBuf), _socket);
 
-                //Clear buffer and start accepting again
-                _buffer = new byte[2048];
-                _serverSocket.BeginAccept(new AsyncCallback(AcceptCallBack), null);
-            }
-            //If there are errors close socket and remove from list
-            else
-            {
+            } else {
+                //If there are errors close socket and remove from list
                 RemoveClient(_socket);
-                _buffer = new byte[2048];
-                _serverSocket.BeginAccept(new AsyncCallback(AcceptCallBack), null);
             }
+            //Clear buffer and start accepting again
+            _buffer = new byte[4096];
+
+            _socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, new AsyncCallback(RecieveCallBack), _socket);
+            _serverSocket.BeginAccept(new AsyncCallback(AcceptCallBack), null);
         }
 
         public void DataManager(Packet p, Socket s) {
-            //if (p.PData.Count == 0 p.PType == ) return;
-
             switch (p.PType) {
                 case PacketType.ListClient:
                     if (!ClientInfo.ContainsKey(s)) {
@@ -105,18 +99,17 @@ namespace Server.Networking
                     }
                     ClientInfo[s][n_info] = s.RemoteEndPoint.ToString();
                     break;
-                case PacketType.FileDirectoryList:
-                    
+                case PacketType.FileList:
                     string[] directories = new string[p.PNum];
                     for (int i = 0; i < p.PNum; i++) {
                         directories[i] = p.PData[i];
                     }
                     int n_files = p.PData.Count;
                     string[] files = new string[(n_files - p.PNum) - 1];
-                    for (int i = p.PNum; i < n_files; i++) {
-                        files[i] = p.PData[i];
+                    for (int i = p.PNum; i < n_files-1; i++) {
+                        files[i - p.PNum] = p.PData[i];
                     }
-                    string path = p.PData[n_files];
+                    string path = p.PData[n_files-1];
                     CurrentRequestedDirectory = (directories, files, path);
                     break;
             }
@@ -133,7 +126,7 @@ namespace Server.Networking
         }
 
         public void RemoveClient(Socket s) {
-            s.Close(1);
+            s.Close(2);
             ClientSockets.Remove(s);
             ClientInfo.Remove(s);
         }

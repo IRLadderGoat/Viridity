@@ -1,16 +1,16 @@
-﻿using Server.Networking;
-using Share;
+﻿using Server.Forms;
+using Server.Networking;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net.Sockets;
-using System.Security.Policy;
 using System.Windows.Forms;
+
 
 namespace Server
 {
     public partial class Form1 : Form
     {
+
         public static Networking.Server SERVER = new Networking.Server();
 
         public Form1()
@@ -29,7 +29,7 @@ namespace Server
             listView1.Items.Clear();
 
             ClientInteraction.ListClients(SERVER);
-            System.Threading.Thread.Sleep(1000);
+            System.Threading.Thread.Sleep(200);
             foreach (KeyValuePair<Socket,string[]> client in SERVER.ClientInfo) {
                 string ping = ClientInteraction.PingClient(client.Key).ToString();
 
@@ -123,6 +123,11 @@ namespace Server
         private void fileBrowserToolStripMenuItem_Click(object sender, EventArgs e) {
             int nClients = listView1.SelectedItems.Count;
             if (nClients != 1) return;
+            Socket client = listView1.SelectedItems[0].Tag as Socket;
+
+            DirectoryForm dff = new DirectoryForm(SERVER, client);
+
+            dff.ShowDialog();
 
 
         }

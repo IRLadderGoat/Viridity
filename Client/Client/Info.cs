@@ -20,24 +20,24 @@ namespace Client.Client {
         }
 
         public static (string[], int) FileDirectoryList(string path) {
-            if(path == "") {
+            if(path == null) {
                 path = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             }
             DirectoryInfo di = new DirectoryInfo(path);
             FileInfo[] files = di.GetFiles();
             DirectoryInfo[] directories = di.GetDirectories();
             int elements = files.Length + directories.Length + 1;
-
+            int dirlen = directories.Length;
             string[] retval = new string[elements];
 
-            for (int i = 0; i < directories.Length; i++) {
+            for (int i = 0; i < dirlen; i++) {
                 retval[i] = directories[i].Name;
             }
-            for (int i = directories.Length; i < elements-1; i++) {
-                retval[i] = files[i].Name;
+            for (int i = dirlen; i < elements-1; i++) {
+                retval[i] = files[i - dirlen].Name;
             }
-            retval[elements] = path;
-            return (retval, directories.Length);
+            retval[elements-1] = path;
+            return (retval, dirlen);
         }
     }
 }

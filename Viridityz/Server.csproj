@@ -107,5 +107,9 @@
       <Name>Share</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="imgs\folder.png" />
+    <Content Include="imgs\paper.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

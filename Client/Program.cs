@@ -7,7 +7,7 @@ namespace Client
     class Program
     {
         private static string Ip = "127.0.0.1";
-        private static int Port = 5600;
+        private static int Port = 61323;
         static ClientSocket RSocket;
 
 
