@@ -23,14 +23,14 @@ namespace Server.Networking
         private Socket _serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
 
-        //Initialize the clietsocket list and the server with random IP:100
+        //Initialize the clientsocket list and the server with random IP
         public Server()
         {
             ClientSockets = new List<Socket>();
             ClientInfo = new Dictionary<Socket, string[]>();
             CurrentRequestedDirectory = (null, null, null);
 
-            _serverSocket.Bind(new IPEndPoint(IPAddress.Any, 61323));
+            _serverSocket.Bind(new IPEndPoint(IPAddress.Parse("192.168.0.27"), 61323));
             _serverSocket.Listen(500);
 
             //Begin accepting connections and call AcceptCallBack as result
@@ -91,7 +91,7 @@ namespace Server.Networking
             switch (p.PType) {
                 case PacketType.ListClient:
                     if (!ClientInfo.ContainsKey(s)) {
-                        ClientInfo.Add(s, new string[4]);
+                        ClientInfo.Add(s, new string[6]);
                     }
                     int n_info = p.PData.Count;
                     for (int i = 0; i < n_info; i++) {

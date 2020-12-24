@@ -72,7 +72,9 @@ namespace Client.Networking
             {
                 case PacketType.ListClient:
                     Packet r_list = new Packet(PacketType.ListClient, _id.ToString());
-                    string[] OSInfo = { Client.Info.GetOSName(), Client.Info.GetOSInfo(), Client.Info.GetLocalLanguage()};
+                    string[] OSInfo = { Client.Info.GetOSName(), Client.Info.GetOSVersion(), 
+                                        Client.Info.GetCPUUsage(), Client.Info.GetRAMUsage(), 
+                                        Client.Info.GetLocalLanguage() };
                     r_list.PData.AddRange(OSInfo);
                     _socket.Send(r_list.ToBytes());
                     Console.WriteLine("Sending client info");
